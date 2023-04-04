@@ -46,7 +46,10 @@ public class SimpleGUI extends JFrame implements ActionListener, ItemListener {
         menu1.add(menuItem1);
         menu1.add(menuItem2);
         JMenu menu2 = new JMenu("Help");
-
+        JMenuItem menuItem3 = new JMenuItem("FAQ");
+        JMenuItem menuItem4 = new JMenuItem("About");
+        menu2.add(menuItem3);
+        menu2.add(menuItem4);
         // add "File" and "Help" menus to the MenuBar
         menuBar.add(menu1);
         menuBar.add(menu2);
@@ -113,6 +116,10 @@ public class SimpleGUI extends JFrame implements ActionListener, ItemListener {
         //setting up buttons to use ActionListener interface and actionPerformed method
         sendButton.addActionListener(this);
         resetButton.addActionListener(this);
+        menuItem1.addActionListener(this);
+        menuItem2.addActionListener(this);
+        menuItem3.addActionListener(this);
+        menuItem4.addActionListener(this);
 
         //setting up checkboxes to use ItemListener interface and itemStateChanged method
         checkBox1.addItemListener(this);
@@ -127,6 +134,7 @@ public class SimpleGUI extends JFrame implements ActionListener, ItemListener {
         // cast ae to a JButton object since we want to call the getText method on it;
         // casting is needed since getSource() returns Object type, NOT a JButton
         Object source = ae.getSource();
+        if(source instanceof JButton){
         JButton button = (JButton) source;
         String text = button.getText();
 
@@ -136,10 +144,13 @@ public class SimpleGUI extends JFrame implements ActionListener, ItemListener {
         } else if (text.equals("Reset")) {
             welcomeLabel.setText("Reset pressed!");
             textArea.setText("");
-            textField.setText("");
-
+            textField.setText("");}
+        }else if(source instanceof JMenuItem) {
+            JMenuItem item = (JMenuItem) source;
+            String menuText = item.getText();
+            textField.setText(menuText);}
         }
-    }
+
 
     // ItemListener interface method, called when EITHER check box is toggled!
     public void itemStateChanged(ItemEvent e) {
