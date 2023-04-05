@@ -10,6 +10,8 @@ import javax.swing.JPanel;
 import javax.swing.JSlider;
 import javax.swing.JTextArea;
 import javax.swing.JTextField;
+import javax.swing.event.ChangeEvent;
+import javax.swing.event.ChangeListener;
 import java.awt.Font;
 import java.awt.BorderLayout;
 import java.awt.GridLayout;
@@ -18,7 +20,7 @@ import java.awt.event.ActionListener;
 import java.awt.event.ItemEvent;
 import java.awt.event.ItemListener;
 
-public class SimpleGUI extends JFrame implements ActionListener, ItemListener {
+public class SimpleGUI extends JFrame implements ActionListener, ItemListener, ChangeListener {
 
     private JCheckBox checkBox1;
     private JCheckBox checkBox2;
@@ -28,7 +30,7 @@ public class SimpleGUI extends JFrame implements ActionListener, ItemListener {
 
 
     public SimpleGUI() {
-        super("Frame title");
+        super("GUI");
         init();
     }
 
@@ -58,11 +60,11 @@ public class SimpleGUI extends JFrame implements ActionListener, ItemListener {
         textArea = new JTextArea();
 
         // create welcome label
-        welcomeLabel = new JLabel("Welcome to my GUI!");
-        welcomeLabel.setFont(new Font("Helvetica", Font.BOLD, 20));
+        welcomeLabel = new JLabel("Welcome to Jacky's GUI!");
+        welcomeLabel.setFont(new Font("Helvetica", Font.BOLD, 15));
 
         // create slider and adjust settings
-        JSlider slider = new JSlider(0, 40, 20);
+        JSlider slider = new JSlider(0, 50, 1);
         slider.setMinorTickSpacing(1);
         slider.setMajorTickSpacing(5);
         slider.setPaintTicks(true);
@@ -80,6 +82,7 @@ public class SimpleGUI extends JFrame implements ActionListener, ItemListener {
         textField = new JTextField(10); // accepts upto 10 characters
         JButton sendButton = new JButton("Send");
         JButton resetButton = new JButton("Reset");
+        JButton newWindow = new JButton("Open");
 
         // create checkboxes
         checkBox1 = new JCheckBox("Yes");
@@ -95,6 +98,7 @@ public class SimpleGUI extends JFrame implements ActionListener, ItemListener {
         panel.add(textField);
         panel.add(sendButton);
         panel.add(resetButton);
+        panel.add(newWindow);
         panel.add(checkBox1);
         panel.add(checkBox2);
 
@@ -116,6 +120,7 @@ public class SimpleGUI extends JFrame implements ActionListener, ItemListener {
         //setting up buttons to use ActionListener interface and actionPerformed method
         sendButton.addActionListener(this);
         resetButton.addActionListener(this);
+        newWindow.addActionListener(this);
         menuItem1.addActionListener(this);
         menuItem2.addActionListener(this);
         menuItem3.addActionListener(this);
@@ -125,6 +130,7 @@ public class SimpleGUI extends JFrame implements ActionListener, ItemListener {
         checkBox1.addItemListener(this);
         checkBox2.addItemListener(this);
 
+        slider.addChangeListener(this);
         // display the frame!
         setVisible(true);
     }
@@ -145,6 +151,19 @@ public class SimpleGUI extends JFrame implements ActionListener, ItemListener {
             welcomeLabel.setText("Reset pressed!");
             textArea.setText("");
             textField.setText("");}
+        else if(text.equals("Open"))
+        {
+            JFrame newFrame = new JFrame("Look at me!");
+            newFrame.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
+            newFrame.setSize(200, 150);
+            newFrame.setLocation( 350, 75);
+            JLabel helloLabel = new JLabel("This is a blank page for now");
+            JPanel panel = new JPanel();
+            panel.add(helloLabel);
+            newFrame.add(panel, BorderLayout.NORTH);
+            newFrame.setVisible(true);
+
+        }
         }else if(source instanceof JMenuItem) {
             JMenuItem item = (JMenuItem) source;
             String menuText = item.getText();
@@ -171,6 +190,14 @@ public class SimpleGUI extends JFrame implements ActionListener, ItemListener {
         // we don't "print" with GUI based apps, but printing
         // can still be helpful for testing and debugging!
         System.out.println("Current state: yes = " + checkBox1.isSelected() + ", no = " + checkBox2.isSelected());
+    }
+
+    public void stateChanged(ChangeEvent x)
+    {
+        Object source = x.getSource();
+        JSlider slider = (JSlider)source;
+        int value = slider.getValue();
+        textArea.setText("" + value);
     }
 }
 
